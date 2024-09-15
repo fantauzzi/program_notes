@@ -374,3 +374,65 @@ Genes in the ranked list that come before the one with the highest running total
 
 Collections of useful gene sets are provided, e.g. see **MSigDB**.
 
+## **Chromatin Modification Vs. Remodeling**
+
+With **chromatin modification (aka epigenetic modifications)**, enzymes alter the chemical structure of amino acids in histones or nucleotides in DNA to affect recruitment of transcription factors, coregulators, and general transcription factors to chromatin. They **affect transcription**, but **don't alter the sequence of DNA bases**. They can be modifications to the DNA or histones, and include
+- **DNA Methylation**: Gene silencing, heterochromatin formation.
+- **Histone Acetylation**: Gene activation, open chromatin (euchromatin).
+- **Histone Methylation**: Can either activate or repress genes (context-dependent).
+- **Histone Phosphorylation**: Regulation of DNA repair, mitosis, and apoptosis.
+- **Histone Ubiquitination**: Gene activation or repression, depending on histone type.
+- **Histone Sumoylation**: Gene repression.
+
+**Chromatin remodeling** alters chromatin structure to regulate transcription.
+It changes histone-DNA interactions in nucleosomes to render DNA either more or less accessible to transcription regulators. It can move histones to new locations, it can eject or incorporate them in chromatine, and replace them with their variants. 
+
+![img_4.png](img_4.png)
+
+, the accessibility of DNA to transcription factors, coregulators, and general transcription factors is altered by enzymes that use energy from ATP hydrolysis to remodel nucleosomes; that is, reposition histone octamers along the DNA, remove histone octamers from DNA, or replace canonical histones in octamers with variant histones.
+
+## Chromatine Remodeling and Protein-DNA Interaction
+
+### 1. **What type of proteins interact with DNA?**
+   DNA-interacting proteins play crucial roles in regulating gene expression, replication, and DNA repair. The main types include:
+
+   - **Transcription Factors**: Bind to specific DNA sequences to regulate transcription.
+   - **Histones**: Proteins around which DNA winds to form chromatin.
+   - **DNA Polymerases**: Enzymes that replicate DNA.
+   - **Helicases**: Unwind the DNA helix during replication and transcription.
+   - **Topoisomerases**: Relieve supercoiling during replication and transcription.
+   - **Chromatin Remodelers**: Alter the structure of chromatin to regulate access to DNA.
+   - **Cohesins/Condensins**: Facilitate the organization and separation of chromosomes during cell division.
+   - **DNA Repair Proteins**: Recognize and repair damaged DNA.
+
+### 2. **What are Transcription Factors (TFs)?**
+   **Transcription factors (TFs)** are proteins that regulate gene expression by binding to specific DNA sequences near target genes (typically at promoters, enhancers, or silencers). They control the recruitment of RNA polymerase and other transcriptional machinery to initiate or inhibit transcription.
+
+   - **Mechanism of Action**:
+     1. **DNA Binding**: TFs have DNA-binding domains that allow them to recognize and bind specific sequences (motifs) in the DNA.
+     2. **Recruitment of Coactivators or Corepressors**: Once bound to DNA, they recruit other proteins like coactivators (to enhance transcription) or corepressors (to inhibit transcription) to activation/repression domains.
+     3. **Regulation of Chromatin Structure**: Some TFs can recruit chromatin remodelers to modify histones or alter nucleosome positioning, making DNA more or less accessible to the transcriptional machinery.
+     4. **Response to Signals**: Many TFs are activated by external signals (e.g., hormones, growth factors) and move from the cytoplasm to the nucleus to exert their effects.
+
+### 3. **What are histone proteins and how do they interact with DNA to form chromatin**
+   Histones are the primary protein components of chromatin, which is a complex of DNA and protein. DNA wraps around histone proteins to compact the DNA into a more organized structure.
+
+   - **Nucleosome Formation**: Histones are organized into octamers (two copies each of H2A, H2B, H3, and H4) around which approximately 146 base pairs of DNA are wound. This structure is called a **nucleosome**.
+   - **Linker Histone (H1)**: Another histone, H1, binds to the DNA between nucleosomes (linker DNA) and helps compact nucleosomes into a higher-order structure.
+   - **Histone-DNA Interactions**: Histones have positively charged amino acids (e.g., lysine and arginine) that interact with the negatively charged phosphate backbone of DNA. This interaction helps stabilize the chromatin structure.
+   - **Chromatin Compaction**: Nucleosomes are further compacted into higher-order structures, eventually forming chromatin fibers that help condense DNA into chromosomes during cell division.
+
+### 4. **What are the differences between euchromatin and heterochromatin**
+   - **Euchromatin**: 
+     - **Structure**: Loosely packed chromatin.
+     - **Histone Modifications**: Associated with active histone modifications, like acetylation (H3K9ac) and certain methylation marks (H3K4me3), which open chromatin.
+     - **DNA Accessibility**: DNA is more accessible to transcription factors and RNA polymerase.
+     - **Gene Expression**: Genes are actively transcribed.
+
+   - **Heterochromatin**:
+     - **Structure**: Densely packed chromatin.
+     - **Histone Modifications**: Enriched in repressive histone marks, such as methylation at H3K9 (H3K9me3) or H3K27 (H3K27me3), which result in tighter chromatin compaction.
+     - **DNA Accessibility**: DNA is less accessible due to the tightly packed nature of the chromatin.
+     - **Gene Expression**: Genes in heterochromatic regions are generally silenced or inactive.
+
+    
