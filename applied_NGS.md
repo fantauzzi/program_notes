@@ -193,3 +193,184 @@ higher expression levels often show more variability than genes with lower expre
 
 The PCA plot can show a separation between sample types (e.g. control and condition), indicating different transcriptional ‘programmes’ being active. A differential gene expression analysis should therefore uncover differentially expressed genes. However, a ‘bad’ PCA plot wouldn’t tell that there is no differential expression, it might just not be captured by the PCA which can only evaluate orthogonal variance, or the discrimination is between other principal components, not the plotted component.
 
+## Pathways
+
+In a living organism, a **pathway** refers to a series of interconnected biochemical reactions or processes that take place within cells to achieve a specific outcome.
+
+### Key Types of Pathways:
+1. **Metabolic Pathways**: 
+   - These involve the chemical reactions that cells use to convert nutrients into energy and building blocks for growth. 
+   - Example: The **glycolysis** pathway, where glucose is broken down to produce energy (ATP).
+
+2. **Signaling Pathways**: 
+   - These control how cells communicate and respond to their environment, often through the activation of proteins or other molecules in a sequence.
+   - Example: The **MAPK signaling pathway**, which helps regulate cell division, differentiation, and stress responses.
+
+3. **Genetic Pathways**: 
+   - These involve the regulation of gene expression, determining when and how genes are activated to produce proteins.
+   - Example: The **lac operon** pathway in bacteria, which regulates the expression of genes involved in lactose metabolism.
+
+## Gene Ontology (GO)
+
+An **ontology** is a controlled vocabulary of terms or concepts and a restricted
+set of relationships between those terms. The **gene ontoloy (GO)** provides a controlled vocabulary that organizes and unifies the representation of **gene products** across species.
+
+GO is a graph.
+- Vertices are GO terms (aka GO classes).
+- Edges are relationships between terms.
+- The **is-a** relationship organises three disjoint **DAGs**.
+
+**Three disjoint hierarchies** of terms in GO, based on their gene product, called **aspects**:
+- **Molecular function** -molecular-level activities performed by gene products.
+- **Cellular component** -where the product exhibits its effect.
+- **Biological process** -the larger processes, or ‘biological programs’ accomplished by multiple molecular activities; the purpose of the product.
+
+![img_2.png](img_2.png)
+
+Image source: https://www.ebi.ac.uk/QuickGO/term/GO:0031985
+
+### GO Terms
+
+Each **GO term** must have:
+- name;
+- unique ID;
+- aspect (which of the three sub-ontologies it belongs to);
+- relationships to other terms -at a minimum, *is-a* with another term, unless an aspect root;
+
+Each **GO term** may also have:
+- secondary IDs;
+- synonyms (other names);
+- database cross-references;
+- comment;
+- subset;
+- "obsolete" tag.
+
+### GO Annotations
+
+**Annotations** associate a gene or gene product with corresponding GO terms. 
+
+*Gene or gene product <----- annotation -----> GO term*  
+
+**Annotation** of a gene or gene product must contain at a minimum: 
+- gene or gene product **identifier**;
+- associated **GO term** and its **aspect**;
+- **evidence** code (type of evidence that supports the annotation);
+- **citation or reference** to the source supporting the annotation (e.g. scientific pubblication or database);
+
+### Taxon constraints
+
+**Taxon constraints** in GO are restrictions that specify whether a particular GO term can or cannot be applied to organisms from certain taxonomic groups (taxa). These constraints help ensure that GO annotations are biologically accurate by preventing the use of terms that are inappropriate or irrelevant for certain organisms.
+
+Example of taxon constraint: 
+* term "nucleus" (GO:0005634)
+  - Only_in_taxon: Eukaryota
+  - Never_in_taxon: Bacteria, Archaea
+
+## Methods for Enrichment Analysis
+
+Enrichment analysis is used to identify if a given list of genes or proteins (often differentially expressed in a study) is associated with certain biological functions, pathways, or other gene sets more than would be expected by chance. 
+
+Two main types of metthods:
+- ranked list of (sampled) genes vs. gene sets;
+- differentially expressed genes vs. background genes set.
+
+Here's a breakdown of the main methodologies:
+
+### 1. **Gene Ontology (GO) Enrichment Analysis**
+   - **Input data**: A list of genes or proteins, often represented by their names or IDs (e.g., gene symbols, Entrez IDs).
+   - **Statistical idea**: GO enrichment calculates whether the overlap between the input gene list and predefined GO terms (groups of genes annotated with common functions) is statistically significant. Common statistical tests used include the Fisher's Exact Test or Hypergeometric Test.
+   - **External data**: Gene Ontology, which provides hierarchical sets of biological processes, molecular functions, and cellular components associated with genes.
+   - **Pitfalls and biases**:
+     - **Bias towards well-studied genes**: Genes that have been extensively studied (e.g., in model organisms like humans and mice) are more likely to be annotated with GO terms, leading to biased results.
+     - **Hierarchical structure**: GO terms are organized in a hierarchy, so parent terms may be enriched just because their child terms are, which can complicate interpretation.
+     - **Multiple testing problem**: Testing multiple GO terms increases the risk of false positives, necessitating correction methods like Bonferroni or Benjamini-Hochberg.
+
+### 2. **KEGG Pathway Enrichment Analysis**
+   - **Input data**: A list of gene or protein identifiers, such as gene symbols or Ensembl IDs.
+   - **Statistical idea**: Similar to GO analysis, this method assesses whether the input gene list is significantly enriched in specific biological pathways. Hypergeometric testing or Fisher's Exact Test is commonly used to evaluate over-representation in KEGG pathways.
+   - **External data**: The Kyoto Encyclopedia of Genes and Genomes (KEGG), a curated database of pathways involved in metabolic, cellular, and systemic processes.
+   - **Pitfalls and biases**:
+     - **Pathway completeness bias**: KEGG pathways are manually curated and tend to reflect well-studied biological processes, leading to underrepresentation of less-characterized pathways.
+     - **Multiple hypothesis testing**: Testing many pathways leads to increased false positives, requiring multiple testing correction.
+     - **Species bias**: KEGG pathway annotations are often incomplete or less accurate for non-model organisms.
+
+### 3. **Gene Set Enrichment Analysis (GSEA)**
+   - **Input data**: A ranked list of all genes (based on an expression metric, such as log fold change), rather than a simple list of "significant" genes.
+   - **Statistical idea**: GSEA assesses whether predefined gene sets (e.g., from GO or KEGG) are enriched at the top (over-expressed genes) or bottom (under-expressed genes) of the ranked list. It uses a running-sum statistic, comparing it to a null distribution obtained through permutation.
+   - **External data**: Predefined gene sets from databases like MSigDB (Molecular Signatures Database), including pathways, GO terms, and curated gene sets.
+   - **Pitfalls and biases**:
+     - **Gene ranking dependency**: Results can be highly sensitive to how genes are ranked. If ranking is based on an arbitrary or unstable statistic, the results may be less reliable.
+     - **Choice of gene set database**: Different databases can give different results, and poorly curated gene sets may introduce bias.
+     - **Permutations for null distribution**: For small gene sets or small sample sizes, permutations may lead to unstable estimates of significance.
+
+### 4. **Over-Representation Analysis (ORA)**
+   - **Input data**: A list of differentially expressed genes (or proteins), typically identified through statistical tests in an omics study.
+   - **Statistical idea**: ORA tests whether genes from a particular gene set (e.g., a pathway or functional category) appear more frequently in the input list than expected by chance. The hypergeometric test or Fisher's Exact Test is often used.
+   - **External data**: Predefined gene sets from databases like GO, KEGG, or Reactome.
+   - **Pitfalls and biases**:
+     - **Input size sensitivity**: The method can be biased by the size of the input gene list. Longer gene lists can artificially inflate enrichment scores.
+     - **Well-studied genes bias**: Similar to GO and KEGG, there is bias towards well-annotated genes.
+     - **Static cutoffs**: ORA relies on a pre-defined list of "significant" genes, but this ignores genes that are just below the cutoff, leading to a loss of information.
+
+### 5. **Functional Class Scoring (FCS)**
+   - **Input data**: Continuous values (e.g., expression data) for all genes rather than a discrete gene list.
+   - **Statistical idea**: FCS methods test whether entire gene sets show coordinated changes in expression across samples, rather than focusing only on individual genes. Gene set statistics are aggregated across the gene set, and permutation tests are used to assess significance.
+   - **External data**: Gene sets from databases like GO, KEGG, or custom gene sets.
+   - **Pitfalls and biases**:
+     - **Gene co-expression**: FCS may give high scores to gene sets with correlated gene expression, even if the biological relevance is unclear.
+     - **Sample size sensitivity**: Requires careful normalization and sufficient sample sizes to prevent false positives or negatives.
+     - **Choice of gene set**: Biased or poorly defined gene sets can result in misleading conclusions.
+
+### 6. **Network-Based Enrichment Analysis**
+   - **Input data**: Gene/protein lists, often with associated interaction or expression data.
+   - **Statistical idea**: This method incorporates interaction networks (e.g., protein-protein interactions) into enrichment analysis, identifying enriched subnetworks or modules within the larger gene/protein interaction network. Permutation-based statistics are often used to evaluate significance.
+   - **External data**: Protein-protein interaction (PPI) networks, pathway databases, and interaction data from sources like STRING or BioGRID.
+   - **Pitfalls and biases**:
+     - **Network completeness bias**: Interaction networks are incomplete and biased towards well-studied proteins, which can skew results.
+     - **Network dynamics**: Static interaction networks might not account for context-specific interactions, which can lead to misleading biological interpretations.
+     - **Topological biases**: Highly connected "hub" proteins in the network are more likely to appear enriched, even if biologically irrelevant.
+
+### 7. **Reactome Pathway Analysis**
+   - **Input data**: A list of genes or proteins, represented by standard gene or protein identifiers.
+   - **Statistical idea**: Similar to KEGG and GO analysis, it tests for over-representation of genes in known biological pathways using hypergeometric or Fisher’s tests.
+   - **External data**: The Reactome pathway database, which contains curated pathways for various biological processes.
+   - **Pitfalls and biases**:
+     - **Species bias**: Like KEGG, Reactome is more complete for model organisms.
+     - **Pathway annotation bias**: Pathways that are well studied tend to have more gene annotations, leading to biased enrichment results.
+
+### General Biases Across Methods:
+   - **Literature bias**: All of these methods are heavily reliant on curated databases, which are often biased towards well-studied genes and pathways (e.g., human, mouse). This may leave less-studied genes or pathways underrepresented.
+   - **Multiple testing correction**: As all methods involve testing many gene sets, pathways, or terms, they are prone to false positives if appropriate corrections for multiple testing (e.g., FDR correction) are not applied.
+   - **Thresholding issues**: Methods that rely on fixed thresholds (e.g., ORA, GO) can miss biologically relevant genes that fall just below the significance cutoff.
+
+Each method offers unique strengths and weaknesses, and the choice of method depends on the dataset, the biological question, and the level of bias one is willing to accept.
+
+## Gene Set Enrichment Analysis (GSEA)
+
+**GSEA** is meant to find which *sets of genes* are *enriched* (over-expressed and/or under-expressed) in one biological state compared to another one (e.g. treatment vs. control). It can be used for comparison of samples belonging to two groups (biological state) only, and works best with a large number of samples (as it will allow to permute samples to generate empirical p-values)
+
+![img_3.png](img_3.png)
+
+Image source: https://pubmed.ncbi.nlm.nih.gov/16199517/
+
+- **Measure** the expression of some genes in two biological classes, taking multiple samples per gene and per class.
+- **Rank** the genes based on some metric (e.g. fold-change between control and treatment, adjusted p-value). The metric must express a correlation between the genes and a phenotype or profile of interest.
+- Chose a number of **gene sets**.
+- For each gene set, calculate the **enrichment score** (ES).
+- **Normalize** the ESs to account of the size of the gene sets.
+- Generate null distributions generated using permutations (of sampes, prefereably), use them to **estimate empirical p-values or FDRs**.
+- Correct the p-values or FDR for **multiple testing**.
+- Determine gene sets that are **significantly enriched**.
+
+The *ES* for a given gene set (against the ranked list) is calculated from a running total. 
+- The running total starts at 0.
+- For every gene in the ranked list, if the gene is also in the given set, then add to the running total; otherwise subtract from it. 
+- The amount added is the correlation between samples in the two groups for the given gene. The amount subtracted is constant, and depends on the respective length of the ranked list and the given gene set.
+- The ES is the maximum deviation from 0 of the running total.
+
+Note: **direction of the comparison** between the two biological classes may matter, e.g. when comparing expression of genes on the sex chromosomes between males and females.
+
+Genes in the ranked list that come before the one with the highest running total are the **leading edge**.
+
+Collections of useful gene sets are provided, e.g. see **MSigDB**.
+
