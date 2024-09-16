@@ -435,4 +435,174 @@ It changes histone-DNA interactions in nucleosomes to render DNA either more or 
      - **DNA Accessibility**: DNA is less accessible due to the tightly packed nature of the chromatin.
      - **Gene Expression**: Genes in heterochromatic regions are generally silenced or inactive.
 
-    
+## Epigenomic Profiling
+
+### 1. **Using Restriction Enzymes**
+   - **Method**: This approach involves cutting DNA at specific recognition sites using restriction enzymes that are sensitive to DNA methylation. Methylated and unmethylated DNA fragments are then differentially analyzed.
+   - **Purpose**: To assess **DNA methylation patterns** by comparing methylation-sensitive and insensitive enzyme cuts.
+   - **Array or Sequencing**: This can be both **array-based** (e.g., HELP assay) and **sequencing-based** (e.g., Methylation-Sensitive Restriction Enzyme Sequencing, MSRE-seq).
+   - **Acronym**: MSRE (Methylation-Sensitive Restriction Enzymes).
+
+### 2. **Using Affinity Enrichment**
+   - **Method**: This involves enriching DNA fragments with specific epigenetic marks (e.g., methylation or histone modifications) using antibodies (immunoprecipitation) or methyl-binding proteins.
+   - **Purpose**: To profile regions of DNA that are modified by specific epigenetic markers, such as **5-methylcytosine** or **histone modifications**.
+   - **Array or Sequencing**: It is primarily **sequencing-based** (e.g., Methylated DNA Immunoprecipitation Sequencing, MeDIP-seq) but can also use **arrays** (e.g., MeDIP-chip).
+   - **Acronym**: MeDIP (Methylated DNA Immunoprecipitation), ChIP-seq (Chromatin Immunoprecipitation sequencing).
+
+### 3. **Using Bisulfite Conversion**
+   - **Method**: DNA is treated with bisulfite, which converts unmethylated cytosines to uracils, while leaving methylated cytosines unchanged. The treated DNA is then sequenced to determine methylation status.
+   - **Purpose**: To map **DNA methylation at single-base resolution**.
+   - **Array or Sequencing**: Both **array-based** (e.g., Illumina Infinium MethylationEPIC Array) and **sequencing-based** (e.g., Whole-Genome Bisulfite Sequencing, WGBS).
+   - **Acronym**: WGBS (Whole-Genome Bisulfite Sequencing), BS-seq (Bisulfite Sequencing).
+
+### 4. **Using Open-Chromatin Digestion**
+   - **Method**: This technique identifies open and accessible regions of chromatin, typically using DNase I or Tn5 transposase, which preferentially digests or tags open chromatin regions.
+   - **Purpose**: To profile **regions of open chromatin**, indicating active regulatory regions such as promoters and enhancers.
+   - **Array or Sequencing**: Primarily **sequencing-based** (e.g., ATAC-seq for Assay for Transposase-Accessible Chromatin, DNase-seq).
+   - **Acronym**: -eq (Assay for Transposase-Accessible Chromatin), DNase-seq.
+
+Each method serves a different purpose in uncovering various aspects of the epigenome, such as DNA methylation, histone modifications, or chromatin accessibility.
+
+## Q&A
+
+### 1. **What are the methods to detect DNA methylation?**
+   - **Bisulfite Sequencing** (BS-seq/WGBS): Converts unmethylated cytosines to uracils for sequencing to identify methylation at single-base resolution.
+   - **Methylated DNA Immunoprecipitation** (MeDIP-seq): Uses antibodies to enrich for methylated DNA followed by sequencing.
+   - **Methylation-Sensitive Restriction Enzyme Sequencing** (MSRE-seq): Uses methylation-sensitive restriction enzymes to cut and sequence unmethylated regions.
+   - **Illumina Infinium Methylation Array**: An array-based method for profiling methylation at specific CpG sites.
+
+### 2. **Which ‘omics methods can measure chromatin accessibility?**
+   - **ATAC-seq** (Assay for Transposase-Accessible Chromatin sequencing): Uses Tn5 transposase to tag open chromatin regions.
+   - **DNase-seq**: Utilizes DNase I to digest accessible chromatin followed by sequencing.
+   - **FAIRE-seq** (Formaldehyde-Assisted Isolation of Regulatory Elements): Isolates open chromatin regions based on DNA-protein crosslinking.
+
+### 3. **Which ‘omics method can measure regions of transcription factor binding or histone modifications?**
+   - **ChIP-seq** (Chromatin Immunoprecipitation sequencing): Uses antibodies to target specific histone modifications or transcription factor-bound DNA, followed by sequencing to map these regions.
+   - **CUT&RUN** (Cleavage Under Targets and Release Using Nuclease): Targets histone modifications or transcription factors with antibodies, followed by DNA cleavage and sequencing for mapping.
+
+## Steps to Chip-seq
+
+Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) is a method used to analyze protein-DNA interactions. Here’s a brief overview of the key steps involved:
+
+1. **Cross-linking**: Cells or tissues are treated with formaldehyde to cross-link proteins to DNA, preserving their interactions.
+
+2. **Chromatin Fragmentation**: The cross-linked chromatin is sheared into small fragments, either by sonication or enzymatic digestion.
+
+3. **Immunoprecipitation (IP)**: An antibody specific to the protein of interest (e.g., a transcription factor or histone modification) is used to immunoprecipitate the protein-DNA complexes.
+
+4. **Reverse Cross-linking**: The cross-links between proteins and DNA are reversed to free the DNA from the proteins.
+
+5. **DNA Purification**: The DNA is purified to remove proteins and other contaminants.
+
+6. **Sequencing**: The purified DNA is prepared for high-throughput sequencing, typically using next-generation sequencing (NGS) platforms.
+
+7. **Quality Control of Raw Reads**:
+   - Use tools like **FastQC** to assess the quality of the raw sequencing reads.
+   - Check for issues such as low-quality bases, adapter contamination, or overrepresented sequences.
+
+8. **Read Preprocessing**:
+   - **Trimming**: Remove adapter sequences and low-quality bases using tools like **Trim Galore!** or **Cutadapt**.
+   - **Filtering**: Discard reads that are too short or of poor quality to improve downstream analyses.
+
+9. **Alignment to Reference Genome**:
+   - Map the cleaned reads to a reference genome (e.g., human genome GRCh38) using aligners like **Bowtie2** or **BWA**.
+   - Generate alignment files in SAM/BAM format.
+
+10. **Post-alignment Processing**:
+    - **Sorting and Indexing**: Use tools like **SAMtools** to sort and index BAM files.
+    - **Duplicate Removal**: Eliminate PCR duplicates using **Picard MarkDuplicates** or **SAMtools rmdup** to reduce bias.
+    - **Filtering**: Remove improperly paired reads or those with low mapping quality.
+    - **Blacklisting**: Some regions are difficult to call, and a blacklist is useful to ‘hide’ them: One possible list to use is the ENCODE blacklist.
+
+11. **Peak Calling**:
+    - Identify regions of significant enrichment (peaks) using peak-calling algorithms like **MACS2**.
+    - Compare ChIP samples to control inputs (e.g., input DNA or IgG controls) to distinguish true binding sites from background noise.
+
+12. **Peak Annotation**:
+    - Associate peaks with genomic features (genes, promoters, enhancers) using tools like **HOMER**, **ChIPseeker**, or **annotatePeaks.pl**.
+    - Determine the distribution of peaks across genomic regions.
+
+13. **Visualization**:
+    - Create coverage tracks (e.g., BEDGraph or BigWig files) for visualization in genome browsers like **IGV** or **UCSC Genome Browser**.
+    - Visualize peak regions and alignments to assess data quality and peak localization.
+
+14. **Motif Analysis**:
+    - Perform de novo motif discovery to identify DNA sequences enriched within the peaks using tools like **MEME** or **HOMER**.
+    - Compare discovered motifs with known databases to identify potential transcription factor binding sites.
+
+15. **Differential Binding Analysis** (if comparing conditions):
+    - Use tools like **DiffBind** or **csaw** to identify peaks that are differentially bound between experimental conditions or treatments.
+
+16. **Functional Enrichment Analysis**:
+    - Conduct Gene Ontology (GO) and pathway enrichment analyses on genes associated with peaks using tools like **DAVID**, **Gene Ontology Consortium**, or **Enrichr**.
+    - Identify biological processes, molecular functions, or pathways that are significantly enriched.
+
+17. **Cross-referencing**:
+    - integrating ChIP-seq peak lists and cross-referencing with expression data, gene promoters, or known SNPs (Intersect or join box).
+
+18. **Validation and Reporting**:
+    - Validate findings using independent methods if possible (e.g., qPCR).
+    - Document all analysis steps, parameters, and results in a comprehensive report.
+
+## Chromosme Conformation Capture
+
+**Chromosome conformation capture** techniques are a set of molecular biology methods used to analyze the spatial organization of chromatin in a cell.
+
+![img_1.png](img_1.png)
+
+Image source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6374129/
+
+### Levels of Chromatin 3D Organization
+
+Chromatin within the nucleus is organized in multiple hierarchical levels, with distinct structures guiding gene regulation and DNA accessibility:
+
+1. **Nucleosomes**: The fundamental unit of chromatin, where ~147 bp of DNA is wrapped around histone proteins. These are the most basic level of chromatin structure.
+   
+2. **Chromatin Loops**: At a larger scale, DNA forms loops, bringing distant parts of the genome into close proximity. These loops allow interactions between enhancers and promoters or between other regulatory elements, influencing gene expression.
+
+3. **Topologically Associating Domains (TADs)**: TADs are contiguous regions within the genome where chromatin interacts more frequently within the domain than with regions outside. TAD boundaries tend to be stable and are thought to insulate regulatory interactions.
+
+4. **Compartmental Domains**: Chromatin is divided into compartments, typically referred to as **A** and **B** compartments. **A compartments** are generally active, gene-rich, and accessible regions, while **B compartments** are inactive, gene-poor, and repressed regions. Compartmentalization reflects a higher-order organization of TADs.
+
+### Roles of the Cohesin Protein Complex and CTCF in Chromatin Loop Formation
+
+1. **Cohesin**: Cohesin is a ring-shaped protein complex that holds sister chromatids together during cell division but also plays a crucial role in facilitating chromatin loops in interphase. Cohesin loads onto chromatin and extrudes loops by bringing distant regions of DNA into proximity, a process often regulated by boundary elements like CTCF.
+
+2. **CTCF (CCCTC-binding factor)**: CTCF is a DNA-binding protein that serves as a boundary element for chromatin loops. It typically binds to specific sites on DNA (often forming the boundaries of TADs) and works in concert with cohesin to anchor the ends of loops. CTCF binding sites are enriched at the edges of chromatin loops and often regulate gene expression by insulating enhancers and promoters within TADs.
+
+### Topologically Associating Domains (TADs)
+
+TADs are genomic regions within which chromatin has a high frequency of interactions. They act as regulatory units, ensuring that enhancers or other regulatory elements interact with genes within the same domain. TADs are bordered by insulator elements such as CTCF binding sites, which prevent cross-domain interactions. The disruption of TAD boundaries can lead to inappropriate gene regulation and has been implicated in diseases like cancer.
+
+### Connection Between Chromatin Compartments, Chromatin Accessibility, and Transcriptional Activity
+
+- **Chromatin compartments (A/B)** reflect the large-scale functional organization of the genome:
+  - **A compartments** are gene-rich, transcriptionally active, and associated with euchromatin, which is more open and accessible to transcription factors.
+  - **B compartments** are gene-poor, transcriptionally inactive, and associated with heterochromatin, which is more condensed and less accessible.
+
+- **Chromatin accessibility** is crucial for transcription. Open chromatin regions, often found in **A compartments**, allow transcription factors and the transcriptional machinery to access regulatory elements such as promoters and enhancers.
+
+- Transcriptional activity is usually higher in regions of open chromatin and **A compartments**, where genes are accessible. In contrast, regions of **B compartments** tend to be transcriptionally silent, with compact chromatin that is less accessible.
+
+### ‘Omics Methods to Measure Chromatin Contacts
+
+Several methods have been developed to study chromatin contacts at various resolutions, from individual loci interactions to genome-wide interactions:
+
+1. **Chromosome Conformation Capture (3C)**: A targeted method to study interactions between specific loci. It uses cross-linking to preserve DNA contacts, followed by restriction digestion, ligation, and PCR to detect the interactions between two loci.
+
+2. **4C (Circular Chromosome Conformation Capture)**: Allows the identification of all interactions of a specific locus with the rest of the genome by using inverse PCR after the 3C protocol.
+
+3. **5C (Carbon Copy Chromosome Conformation Capture)**: A multiplexed version of 3C that can examine many interactions across a genomic region. It is suited for studying interactions across a small genomic region but with higher throughput.
+
+4. **Hi-C**: A genome-wide approach that captures all chromatin interactions within a genome. Hi-C generates contact maps that show interaction frequencies between all pairs of loci in the genome. This method is widely used for studying TADs, loops, and compartments.
+
+5. **ChIA-PET (Chromatin Interaction Analysis by Paired-End Tag sequencing)**: A method to study chromatin contacts that are mediated by a specific protein, like CTCF. It combines chromatin immunoprecipitation (ChIP) with chromatin interaction mapping to identify protein-mediated loops.
+
+### Method to Test if a Chromatin Contact Exists Between 2 Loci
+
+To test if a specific chromatin contact exists between two loci, **3C** (Chromosome Conformation Capture) is the most suitable method. It provides direct evidence of physical interaction between two selected regions of the genome by cross-linking, ligating, and using PCR with primers specific to the two loci of interest.
+
+### Method to Identify All Other Loci That Interact with a Specific Locus
+
+To identify all loci that interact with a specific locus, **4C** (Circular Chromosome Conformation Capture) would be the method of choice. 4C allows for the comprehensive mapping of all regions of the genome that physically interact with a given locus, providing a more holistic view of its interaction network.
+
