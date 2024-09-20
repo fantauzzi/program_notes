@@ -590,11 +590,19 @@ Several methods have been developed to study chromatin contacts at various resol
 
 1. **Chromosome Conformation Capture (3C)**: A targeted method to study interactions between specific loci. It uses cross-linking to preserve DNA contacts, followed by restriction digestion, ligation, and PCR to detect the interactions between two loci.
 
+![img_5.png](img_5.png)
+
+Image source: https://www.science.org/doi/10.1126/science.1067799
+
 2. **4C (Circular Chromosome Conformation Capture)**: Allows the identification of all interactions of a specific locus with the rest of the genome by using inverse PCR after the 3C protocol.
 
 3. **5C (Carbon Copy Chromosome Conformation Capture)**: A multiplexed version of 3C that can examine many interactions across a genomic region. It is suited for studying interactions across a small genomic region but with higher throughput.
 
 4. **Hi-C**: A genome-wide approach that captures all chromatin interactions within a genome. Hi-C generates contact maps that show interaction frequencies between all pairs of loci in the genome. This method is widely used for studying TADs, loops, and compartments.
+
+![img_6.png](img_6.png)
+
+Image source: https://pubmed.ncbi.nlm.nih.gov/19815776/jj
 
 5. **ChIA-PET (Chromatin Interaction Analysis by Paired-End Tag sequencing)**: A method to study chromatin contacts that are mediated by a specific protein, like CTCF. It combines chromatin immunoprecipitation (ChIP) with chromatin interaction mapping to identify protein-mediated loops.
 
@@ -605,4 +613,39 @@ To test if a specific chromatin contact exists between two loci, **3C** (Chromos
 ### Method to Identify All Other Loci That Interact with a Specific Locus
 
 To identify all loci that interact with a specific locus, **4C** (Circular Chromosome Conformation Capture) would be the method of choice. 4C allows for the comprehensive mapping of all regions of the genome that physically interact with a given locus, providing a more holistic view of its interaction network.
+
+## TAD -Topologically Associating Domain
+
+A **TAD** is a self-interacting genomic region, i.e. a region of the genome within which there are frequent interactions (enhancer-promoter interactions). 
+
+They can be seen in heatmaps coming from Hi-C experiments; they can be detected using HMMs. 
+
+![img_7.png](img_7.png)
+
+Image source: https://pubmed.ncbi.nlm.nih.gov/22495300/
+
+TADs tend to be conserved across cell types, and also between humans and mice.
+
+Disruption of domain structures is associated with sever phenotypes (e.g. limb malformation).
+
+![img_8.png](img_8.png)
+
+Image source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5371509/
+
+**TAD boundaries** are enriched for transcription/promoter marks and retrotransposons, and **CTCF** protein binding sitesl.
+
+## Chromatine A and B Compartments
+
+The A and B compartments of chromatin are large-scale structural domains within the genome that reflect different functional and organizational states of chromatin. 
+
+- **A Compartment**: More active, open, gene-rich, early-replicating, **euchromatin**.
+- **B Compartment**: More inactive, compact, gene-poor, late-replicating, **heterochromatin**.
+
+**Compartments are calculated** with Hi-C experiments on chromosomes. To determine the compartments in a given chromosome:
+- obtain the **Hi-C contact matrix** for the chromosome, and normalise it;
+- for each genomic region (row) compute its **interaction profile** with all other regions;
+- perform **PCA** on the interaction profiles;
+- extract the **first PC** of the interaction profiles;
+- regions with **1st PC > 0 are in a compartment A**, otherwise in a compartment B;
+- compartments can be partitioned further in sub-compartments.
 
